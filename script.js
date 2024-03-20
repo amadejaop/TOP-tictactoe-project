@@ -26,12 +26,49 @@ const gameboard = (function () {
         return (board[row][column] === "");
     }
 
-    function markChosenCell(row, column) {
+    function markChosenCell(row, column, player) {
         // CHANGE TO SELECTED PLAYER SYMBOL
-        board[row][column] = "o";
+        board[row][column] = player.symbol;
     }
 
-    return { chosenCellEmpty, createBoard, printBoard, markChosenCell };
+    function boardFull() {
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
+                if (board[i][j] === "") {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function checkWinner(player) {
+        // horizontal win
+        for (let i = 0; i < rows; i++) {
+            if (board[i][0] === player.symbol && board[i][1] === player.symbol && board[i][2] === player.symbol) {
+                player.winner = true;
+                return true;
+            }
+        }
+
+        // vertical win
+        for (let i = 0; i < rows; i++) {
+            if (board[0][i] === player.symbol && board[1][i] === player.symbol && board[2][i] === player.symbol) {
+                player.winner = true;
+                return true;
+            }
+        }
+
+        // diagonal win
+        if ((board[0][0] === player.symbol && board[1][1] === player.symbol && board[2][2] === player.symbol) || (board[2][0] === player.symbol && board[1][1] === player.symbol && board[0][2] === player.symbol)) {
+            player.winner = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    return { boardFull, checkWinner, chosenCellEmpty, createBoard, printBoard, markChosenCell };
 })();
 
 // gameboard.createBoard();
@@ -56,13 +93,15 @@ const players = (function () {
     }
 
     function createPlayer(name, symbol) {
-        playersList.push({ name, symbol, score: 0 });
+        playersList.push({ name, symbol, score: 0, winner: false });
         // console.log(playersList);
     }
 
     function getPlayersList() {
         return playersList;
     }
+
+    
 
     return { askForPlayerName, createPlayer, getPlayersList };
 })();
@@ -79,16 +118,20 @@ const players = (function () {
 // who won and how many games has he won?
 // is the selected cell free or already occupied?
 const gameController = (function () {
-    function playRound() {
+    
+    function generateRandomNumber() {
+        return (Math.floor(Math.random() * 2));
+    }
+
+    function playRound(player) {
         const row = prompt("Select row (0-2):");
         const column = prompt("Select column (0-2)");
         if (gameboard.chosenCellEmpty(row, column)) {
-            gameboard.markChosenCell(row, column);
+            gameboard.markChosenCell(row, column, player);
         }
     }
 
-    return { playRound };
-
+    return { playRound, generateRandomNumber };
 })();
 
 // gameController.playRound();
@@ -104,3 +147,25 @@ const gameController = (function () {
 // 8. ask if the user wants to play again or not
 // 9. if not, update the page to show the winner of all games
 //    in big flashy letters!
+
+function playGame() {
+    players.askForPlayerName();
+    const listOfPlayers = players.getPlayersList();
+
+    gameboard.createBoard();
+    gameboard.printBoard();
+
+    let firstPlayer = gameController.generateRandomNumber();
+    console.log("It's " + listOfPlayers[firstPlayer].name + "'s turn.");
+    gameController.playRound(listOfPlayers[firstPlayer]);
+    gameboard.printBoard();
+
+    let index;
+    if (firstPlayer === 0) {
+        index = 1;
+    } else {
+        index = 0;
+    }
+}
+
+playGame();
