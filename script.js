@@ -1,7 +1,11 @@
 const gameboard = (function () {
     const rows = 3;
     const columns = 3;
-    const board = [];
+    const board = [
+        ["", "X", "O"],
+        ["", "X", "O"],
+        ["", "X", "O"]
+    ];
 
     function createBoard() {
         for (let i = 0; i < rows; i++) {
@@ -10,6 +14,10 @@ const gameboard = (function () {
                 board[i][j] = "";
             }
         }
+    }
+
+    function getBoard() {
+        return board;
     }
 
     function printBoard() {
@@ -66,7 +74,7 @@ const gameboard = (function () {
         return false;
     }
 
-    return { boardFull, checkWinner, chosenCellEmpty, createBoard, printBoard, markChosenCell };
+    return { boardFull, checkWinner, chosenCellEmpty, createBoard, printBoard, markChosenCell, getBoard };
 })();
 
 const players = (function () {
@@ -177,4 +185,23 @@ function playGame() {
 
 }
 
-playGame();
+// playGame();
+
+const viewController = (function () {
+    const cells = document.getElementsByClassName("cell");
+    let currentBoard = gameboard.getBoard();
+    let k = 0;
+    
+    function displayBoard() {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                cells[k].textContent = currentBoard[i][j];
+                k++;
+            }
+        }
+    }
+
+    return { displayBoard };
+})();
+
+viewController.displayBoard();
