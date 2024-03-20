@@ -177,9 +177,23 @@ function playGame() {
         console.log("It's " + listOfPlayers[index].name + "'s turn.");
         gameController.playRound(listOfPlayers[index]);
         gameboard.printBoard();
+        if (gameboard.checkWinner(listOfPlayers[0])) {
+            console.log(listOfPlayers[0].name + " wins!");
+            break;
+        } else if (gameboard.checkWinner(listOfPlayers[1])) {
+            console.log(listOfPlayers[1].name + " wins!");
+            break;
+        }
     }
-
-    console.log("board full");
+    if (gameboard.boardFull()) {
+        if (gameboard.checkWinner(listOfPlayers[0])) {
+            console.log(listOfPlayers[0].name + " wins!");
+        } else if (gameboard.checkWinner(listOfPlayers[1])) {
+            console.log(listOfPlayers[1].name + " wins!");
+        } else {
+            console.log("It's a draw!");
+        }
+    }
 }
 
 playGame();
