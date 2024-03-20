@@ -47,6 +47,7 @@ const gameboard = (function () {
         for (let i = 0; i < rows; i++) {
             if (board[i][0] === player.symbol && board[i][1] === player.symbol && board[i][2] === player.symbol) {
                 player.winner = true;
+                player.score++;
                 return true;
             }
         }
@@ -55,6 +56,7 @@ const gameboard = (function () {
         for (let i = 0; i < rows; i++) {
             if (board[0][i] === player.symbol && board[1][i] === player.symbol && board[2][i] === player.symbol) {
                 player.winner = true;
+                player.score++;
                 return true;
             }
         }
@@ -62,6 +64,7 @@ const gameboard = (function () {
         // diagonal win
         if ((board[0][0] === player.symbol && board[1][1] === player.symbol && board[2][2] === player.symbol) || (board[2][0] === player.symbol && board[1][1] === player.symbol && board[0][2] === player.symbol)) {
             player.winner = true;
+            player.score++;
             return true;
         }
 
@@ -124,8 +127,13 @@ const gameController = (function () {
     }
 
     function playRound(player) {
-        const row = prompt("Select row (0-2):");
-        const column = prompt("Select column (0-2)");
+        let row;
+        let column;
+        do {
+            row = prompt("Select row (0-2):");
+            column = prompt("Select column (0-2)");
+        } while (row > 2 || row < 0 || column > 2 || column < 0)
+        
 
         if (gameboard.chosenCellEmpty(row, column)) {
             gameboard.markChosenCell(row, column, player);
@@ -162,38 +170,48 @@ function playGame() {
     players.askForPlayerName();
     const listOfPlayers = players.getPlayersList();
 
-    gameboard.createBoard();
-    gameboard.printBoard();
+    let playAgain = "";
 
-    let firstPlayer = gameController.generateRandomNumber();
-    console.log("It's " + listOfPlayers[firstPlayer].name + "'s turn.");
-    gameController.playRound(listOfPlayers[firstPlayer]);
-    gameboard.printBoard();
-
-    let index = firstPlayer;
-
-    while (!gameboard.boardFull()){
-        index = gameController.swapPlayers(index);
-        console.log("It's " + listOfPlayers[index].name + "'s turn.");
-        gameController.playRound(listOfPlayers[index]);
+    do {
+        gameboard.createBoard();
         gameboard.printBoard();
-        if (gameboard.checkWinner(listOfPlayers[0])) {
-            console.log(listOfPlayers[0].name + " wins!");
-            break;
-        } else if (gameboard.checkWinner(listOfPlayers[1])) {
-            console.log(listOfPlayers[1].name + " wins!");
-            break;
+
+        let firstPlayer = gameController.generateRandomNumber();
+        console.log("It's " + listOfPlayers[firstPlayer].name + "'s turn.");
+        gameController.playRound(listOfPlayers[firstPlayer]);
+        gameboard.printBoard();
+
+        let index = firstPlayer;
+
+        while (!gameboard.boardFull()){
+            index = gameController.swapPlayers(index);
+            console.log("It's " + listOfPlayers[index].name + "'s turn.");
+            gameController.playRound(listOfPlayers[index]);
+            gameboard.printBoard();
+            if (gameboard.checkWinner(listOfPlayers[0])) {
+                console.log(listOfPlayers[0].name + " wins!");
+                break;
+            } else if (gameboard.checkWinner(listOfPlayers[1])) {
+                console.log(listOfPlayers[1].name + " wins!");
+                break;
+            }
         }
-    }
-    if (gameboard.boardFull()) {
-        if (gameboard.checkWinner(listOfPlayers[0])) {
-            console.log(listOfPlayers[0].name + " wins!");
-        } else if (gameboard.checkWinner(listOfPlayers[1])) {
-            console.log(listOfPlayers[1].name + " wins!");
-        } else {
-            console.log("It's a draw!");
+        if (gameboard.boardFull()) {
+            if (gameboard.checkWinner(listOfPlayers[0])) {
+                console.log(listOfPlayers[0].name + " wins!");
+            } else if (gameboard.checkWinner(listOfPlayers[1])) {
+                console.log(listOfPlayers[1].name + " wins!");
+            } else {
+                console.log("It's a draw!");
+            }
         }
-    }
+        console.log(listOfPlayers[0].score);
+        console.log(listOfPlayers[1].score);
+
+
+        playAgain = prompt("Play again? (y / n)");
+    } while (playAgain.toLowerCase() === "y")
+
 }
 
 playGame();
