@@ -1,7 +1,3 @@
-// GAMEBOARD obj
-// create board - how many rows and columns?
-// state of the board, where are the X's and O's
-// functions for getting the board and printing the board
 const gameboard = (function () {
     const rows = 3;
     const columns = 3;
@@ -27,7 +23,6 @@ const gameboard = (function () {
     }
 
     function markChosenCell(row, column, player) {
-        // CHANGE TO SELECTED PLAYER SYMBOL
         board[row][column] = player.symbol;
     }
 
@@ -74,14 +69,6 @@ const gameboard = (function () {
     return { boardFull, checkWinner, chosenCellEmpty, createBoard, printBoard, markChosenCell };
 })();
 
-// gameboard.createBoard();
-// gameboard.printBoard();
-
-
-
-// PLAYERS obj
-// get player names and create objects for them
-// what marker does each player have?
 const players = (function () {
     const playersList = [];
 
@@ -97,29 +84,19 @@ const players = (function () {
 
     function createPlayer(name, symbol) {
         playersList.push({ name, symbol, score: 0, winner: false });
-        // console.log(playersList);
     }
 
     function getPlayersList() {
         return playersList;
     }
 
+    function getPlayerScore(player) {
+        return player.score;
+    }
 
-
-    return { askForPlayerName, createPlayer, getPlayersList };
+    return { askForPlayerName, createPlayer, getPlayersList, getPlayerScore };
 })();
 
-// players.askForPlayerName();
-// const arr = players.getPlayersList();
-// console.log(arr[0].name);
-
-// GAME CONTROLLER obj
-// who starts the game? random seems the best
-// whoose turn is it?
-// which cell did the user choose?
-// is the game a win, or a draw?
-// who won and how many games has he won?
-// is the selected cell free or already occupied?
 const gameController = (function () {
     
     function generateRandomNumber() {
@@ -151,20 +128,6 @@ const gameController = (function () {
 
     return { playRound, generateRandomNumber, swapPlayers };
 })();
-
-// gameController.playRound();
-// gameboard.printBoard();
-
-// 1. ask for the name
-// 2. create board
-// 3. prompt for coords
-// 4. check if we have a winner
-// 5. check if it is a draw
-// 6. repeat 3 - 5
-// 7. print winner and update the score
-// 8. ask if the user wants to play again or not
-// 9. if not, update the page to show the winner of all games
-//    in big flashy letters!
 
 function playGame() {
     players.askForPlayerName();
