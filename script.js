@@ -101,7 +101,7 @@ const players = (function () {
         return playersList;
     }
 
-    
+
 
     return { askForPlayerName, createPlayer, getPlayersList };
 })();
@@ -126,12 +126,22 @@ const gameController = (function () {
     function playRound(player) {
         const row = prompt("Select row (0-2):");
         const column = prompt("Select column (0-2)");
+
         if (gameboard.chosenCellEmpty(row, column)) {
             gameboard.markChosenCell(row, column, player);
+        } else {
+            playRound(player);
         }
     }
 
-    return { playRound, generateRandomNumber };
+    function swapPlayers(number) {
+        if (number === 0) {
+            return 1;
+        }
+        return 0;
+    }
+
+    return { playRound, generateRandomNumber, swapPlayers };
 })();
 
 // gameController.playRound();
@@ -160,12 +170,16 @@ function playGame() {
     gameController.playRound(listOfPlayers[firstPlayer]);
     gameboard.printBoard();
 
-    let index;
-    if (firstPlayer === 0) {
-        index = 1;
-    } else {
-        index = 0;
+    let index = firstPlayer;
+
+    while (!gameboard.boardFull()){
+        index = gameController.swapPlayers(index);
+        console.log("It's " + listOfPlayers[index].name + "'s turn.");
+        gameController.playRound(listOfPlayers[index]);
+        gameboard.printBoard();
     }
+
+    console.log("board full");
 }
 
 playGame();
