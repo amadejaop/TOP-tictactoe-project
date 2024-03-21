@@ -121,6 +121,29 @@ const gameController = (function () {
         if (gameboard.chosenCellEmpty(event.target.row, event.target.column)) {
             gameboard.markChosenCell(event.target.row, event.target.column, listOfPlayers[index].symbol);
             viewController.displayBoard();
+            gameboard.checkWinner(listOfPlayers[0]);
+            gameboard.checkWinner(listOfPlayers[1]);
+
+            if (gameboard.boardFull()) {
+                if (listOfPlayers[0].winner) {
+                    viewController.displayMessage(listOfPlayers[0].name + " wins!");
+                    viewController.stopGame();
+                } else if (listOfPlayers[1].winner) {
+                    viewController.displayMessage(listOfPlayers[1].name + " wins!");
+                    viewController.stopGame();
+                } else {
+                    viewController.displayMessage("It's a draw!");
+                    viewController.stopGame();
+                }
+            } else {
+                if (listOfPlayers[0].winner) {
+                    viewController.displayMessage(listOfPlayers[0].name + " wins!");
+                    viewController.stopGame();
+                } else if (listOfPlayers[1].winner) {
+                    viewController.displayMessage(listOfPlayers[1].name + " wins!");
+                    viewController.stopGame();
+                }
+            }
         } else {
             return;
         }
@@ -145,6 +168,7 @@ const viewController = (function () {
     const playerOneScore = document.querySelector("#player-one-score");
     const playerTwoScore = document.querySelector("#player-two-score");
     const messages = document.querySelector("#messages");
+    const board = document.querySelector("table");
     
     let currentBoard = gameboard.getBoard();
     let l = 0;
@@ -154,7 +178,8 @@ const viewController = (function () {
             cells[l].row = i;
             cells[l].column = j;
             cells[l].playerIndex = 1;
-            cells[l].addEventListener("click", function(event) {
+            // store the anonymous function inside the fn property of the element:
+            cells[l].addEventListener("click",cells[l].fn=function(event) {
                 console.log(event);
                 gameController.playRound(event);
             });
@@ -192,7 +217,13 @@ const viewController = (function () {
         messages.textContent = message;
     }
 
-    return { displayBoard, displayPlayerNames, displayPlayerScores, displayMessage, updatePlayerIndex };
+    function stopGame() {
+        for (const cell of cells) {
+            cell.removeEventListener("click", cell.fn);
+        }
+    }
+
+    return { displayBoard, stopGame, displayPlayerNames, displayPlayerScores, displayMessage, updatePlayerIndex };
 })();
 
 
