@@ -7,6 +7,33 @@
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+    <!-- 
+    - display for messages: whoose turn it is, who won
+    - display for scores
+    - another div for who won at the end, when users no longer want to
+    play the game; also, hide all other elements from the page!
+    -->
+    <div id="scoreboard">
+        <div id="player-one">
+            <p id="player-one-name"></p>
+            <p id="player-one-score"></p>
+        </div>
+        <div id="player-two">
+            <p id="player-two-name"></p>
+            <p id="player-two-score"></p>
+        </div>
+    </div>
+
+    <div id="messages"></div>
+
+    <div>
+        <p class="play-again-text">Play again?</p>
+        <div>
+            <button type="button">YES</button>
+            <button type="button">NO</button>
+        </div>
+    </div>
+        
     <table>
        <tr>
         <td class="cell"></td>
@@ -24,6 +51,8 @@
         <td class="cell"></td>
        </tr>
     </table>
+
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil eius accusantium amet. Dicta rem et incidunt hic nobis aperiam repellendus!</p>
     <script src="./script.js"></script>
 </body>
 </html>
