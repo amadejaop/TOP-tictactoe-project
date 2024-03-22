@@ -12,6 +12,14 @@ const gameboard = (function () {
         }
     }
 
+    function emptyBoard() {
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
+                board[i][j] = "";
+            }
+        }
+    }
+
     function getBoard() {
         return board;
     }
@@ -70,7 +78,7 @@ const gameboard = (function () {
         return false;
     }
 
-    return { boardFull, checkWinner, chosenCellEmpty, createBoard, printBoard, markChosenCell, getBoard };
+    return { boardFull, emptyBoard, checkWinner, chosenCellEmpty, createBoard, printBoard, markChosenCell, getBoard };
 })();
 
 const players = (function () {
@@ -114,13 +122,14 @@ const gameController = (function () {
         return (Math.floor(Math.random() * 2));
     }
 
-    function playRound(event) { 
+    function playTurn(event) { 
 
         let index = event.target.playerIndex - 1;
         
         if (gameboard.chosenCellEmpty(event.target.row, event.target.column)) {
             gameboard.markChosenCell(event.target.row, event.target.column, listOfPlayers[index].symbol);
             viewController.displayBoard();
+            gameboard.printBoard();
             gameboard.checkWinner(listOfPlayers[0]);
             gameboard.checkWinner(listOfPlayers[1]);
 
@@ -128,29 +137,24 @@ const gameController = (function () {
                 if (listOfPlayers[0].winner) {
                     viewController.displayMessage(listOfPlayers[0].name + " wins!");
                     viewController.stopGame();
-                    return;
                     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
                 } else if (listOfPlayers[1].winner) {
                     viewController.displayMessage(listOfPlayers[1].name + " wins!");
                     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
                     viewController.stopGame();
-                    return;
                 } else {
                     viewController.displayMessage("It's a draw!");
                     viewController.stopGame();
-                    return;
                 }
             } else {
                 if (listOfPlayers[0].winner) {
                     viewController.displayMessage(listOfPlayers[0].name + " wins!");
                     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
                     viewController.stopGame();
-                    return;
                 } else if (listOfPlayers[1].winner) {
                     viewController.displayMessage(listOfPlayers[1].name + " wins!");
                     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
                     viewController.stopGame();
-                    return;
                 }
             }
         } else {
@@ -167,7 +171,7 @@ const gameController = (function () {
         return 0;
     }
 
-    return { playRound, generateRandomNumber, swapPlayers };
+    return { playTurn, generateRandomNumber, swapPlayers };
 })();
 
 const viewController = (function () {
@@ -178,21 +182,27 @@ const viewController = (function () {
     const playerTwoScore = document.querySelector("#player-two-score");
     const messages = document.querySelector("#messages");
     const playAgainDiv = document.querySelector("#play-again");
+    const yesButton = document.querySelector("#yes");
+    const noButton = document.querySelector("#no");
+
+    yesButton.addEventListener("click", playRound);
     
     let currentBoard = gameboard.getBoard();
-    let l = 0;
 
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            cells[l].row = i;
-            cells[l].column = j;
-            cells[l].playerIndex = 1;
-            // store the anonymous function inside the fn property of the element:
-            cells[l].addEventListener("click",cells[l].fn=function(event) {
-                console.log(event);
-                gameController.playRound(event);
-            });
-            l++;
+    function addEventsToCells() {
+        let l = 0;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                cells[l].row = i;
+                cells[l].column = j;
+                cells[l].playerIndex = 1;
+                // store the anonymous function inside the fn property of the element:
+                cells[l].addEventListener("click",cells[l].fn=function(event) {
+                    gameController.playTurn(event);
+                });
+                console.log("event added");
+                l++;
+            }
         }
     }
 
@@ -229,29 +239,38 @@ const viewController = (function () {
     function stopGame() {
         for (const cell of cells) {
             cell.removeEventListener("click", cell.fn);
+            console.log("event removed");
         }
-        playAgainPrompt();
+        showAgainPrompt();
     }
 
-    function playAgainPrompt() {
+    function showAgainPrompt() {
         playAgainDiv.style.visibility = "visible";
     }
 
-    return { displayBoard, stopGame, displayPlayerNames, displayPlayerScores, playAgainPrompt, displayMessage, updatePlayerIndex };
+    function hideAgainPrompt() {
+        playAgainDiv.style.visibility = "hidden";
+    }
+
+    return { displayBoard, addEventsToCells, stopGame, displayPlayerNames, displayPlayerScores, showAgainPrompt, hideAgainPrompt, displayMessage, updatePlayerIndex };
 })();
 
 
 
 function playGame() {
+    // code for the first time players play the game
     players.askForPlayerName();
     const listOfPlayers = players.getPlayersList();
     viewController.displayPlayerNames(listOfPlayers[0].name, listOfPlayers[1].name);
     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
 
     // let playAgain = "";
+    // code for playing another round of the game
     gameboard.createBoard();
     viewController.displayBoard();
+    gameboard.printBoard();
     viewController.displayMessage("It's " + listOfPlayers[0].name + "'s turn.");
+    playRound();
     /*
     do {
         gameboard.createBoard();
@@ -261,7 +280,7 @@ function playGame() {
         // let firstPlayer = gameController.generateRandomNumber();
         viewController.displayMessage("It's " + listOfPlayers[0].name + "'s turn.");
         // console.log("It's " + listOfPlayers[firstPlayer].name + "'s turn.");
-        // gameController.playRound(listOfPlayers[firstPlayer]);
+        // gameController.playTurn(listOfPlayers[firstPlayer]);
         viewController.displayBoard();
         // gameboard.printBoard();
 
@@ -271,7 +290,7 @@ function playGame() {
             index = gameController.swapPlayers(index);
             viewController.displayMessage("It's " + listOfPlayers[index].name + "'s turn.");
             // console.log("It's " + listOfPlayers[index].name + "'s turn.");
-            gameController.playRound(listOfPlayers[index]);
+            gameController.playTurn(listOfPlayers[index]);
             // gameboard.printBoard();
             viewController.displayBoard();
             if (gameboard.checkWinner(listOfPlayers[0])) {
@@ -302,8 +321,16 @@ function playGame() {
 
 }
 
+function playRound() {
+    viewController.hideAgainPrompt();
+    const listOfPlayers = players.getPlayersList();
+    listOfPlayers[0].winner = false;
+    listOfPlayers[1].winner = false;
+    gameboard.emptyBoard();
+    viewController.displayBoard();
+    gameboard.printBoard();
+    viewController.addEventsToCells();
+    viewController.displayMessage("It's " + listOfPlayers[0].name + "'s turn.");
+}
+
 playGame();
-
-
-
-viewController.displayBoard();
