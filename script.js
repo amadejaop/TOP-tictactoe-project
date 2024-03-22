@@ -128,8 +128,10 @@ const gameController = (function () {
                 if (listOfPlayers[0].winner) {
                     viewController.displayMessage(listOfPlayers[0].name + " wins!");
                     viewController.stopGame();
+                    viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
                 } else if (listOfPlayers[1].winner) {
                     viewController.displayMessage(listOfPlayers[1].name + " wins!");
+                    viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
                     viewController.stopGame();
                 } else {
                     viewController.displayMessage("It's a draw!");
@@ -138,9 +140,13 @@ const gameController = (function () {
             } else {
                 if (listOfPlayers[0].winner) {
                     viewController.displayMessage(listOfPlayers[0].name + " wins!");
+                    viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
+
                     viewController.stopGame();
                 } else if (listOfPlayers[1].winner) {
                     viewController.displayMessage(listOfPlayers[1].name + " wins!");
+                    viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
+
                     viewController.stopGame();
                 }
             }
