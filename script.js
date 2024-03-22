@@ -128,33 +128,36 @@ const gameController = (function () {
                 if (listOfPlayers[0].winner) {
                     viewController.displayMessage(listOfPlayers[0].name + " wins!");
                     viewController.stopGame();
+                    return;
                     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
                 } else if (listOfPlayers[1].winner) {
                     viewController.displayMessage(listOfPlayers[1].name + " wins!");
                     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
                     viewController.stopGame();
+                    return;
                 } else {
                     viewController.displayMessage("It's a draw!");
                     viewController.stopGame();
+                    return;
                 }
             } else {
                 if (listOfPlayers[0].winner) {
                     viewController.displayMessage(listOfPlayers[0].name + " wins!");
                     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
-
                     viewController.stopGame();
+                    return;
                 } else if (listOfPlayers[1].winner) {
                     viewController.displayMessage(listOfPlayers[1].name + " wins!");
                     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
-
                     viewController.stopGame();
+                    return;
                 }
             }
         } else {
             return;
         }
         (event.target.playerIndex === 1) ? viewController.updatePlayerIndex(2) : viewController.updatePlayerIndex(1);
-        
+        viewController.displayMessage("It's " + listOfPlayers[event.target.playerIndex - 1].name + "'s turn.");
     }
 
     function swapPlayers(number) {
