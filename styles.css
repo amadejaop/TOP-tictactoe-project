@@ -1,12 +1,17 @@
 body {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
+    
     height: 100vh;
-    justify-content: space-around;
     margin: 0;
     padding: 0;
     width: 100vw;
+}
+
+main {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 90vh;
 }
 
 #play-again {
@@ -26,4 +31,10 @@ td {
     height: 100px;
     text-align: center;
     width: 100px;
+}
+
+footer p {
+    text-align: center;
+    width: 75%;
+    margin: 0 auto;
 }

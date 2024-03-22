@@ -179,7 +179,15 @@ const gameController = (function () {
         return 0;
     }
 
-    return { playTurn, generateRandomNumber, swapPlayers };
+    function checkFinalWinner() {
+        if (listOfPlayers[0].score > listOfPlayers[1].score) {
+            return listOfPlayers[0];
+        } else {
+            return listOfPlayers[1];
+        }
+    }
+
+    return { playTurn, generateRandomNumber, swapPlayers, checkFinalWinner };
 })();
 
 const viewController = (function () {
@@ -192,8 +200,12 @@ const viewController = (function () {
     const playAgainDiv = document.querySelector("#play-again");
     const yesButton = document.querySelector("#yes");
     const noButton = document.querySelector("#no");
+    const scoreboard = document.querySelector("#scoreboard");
+    const table = document.querySelector("table");
+    const body = document.querySelector("body");
 
     yesButton.addEventListener("click", playRound);
+    noButton.addEventListener("click", displayFinalWinner);
     
     let currentBoard = gameboard.getBoard();
 
@@ -259,6 +271,20 @@ const viewController = (function () {
 
     function hideAgainPrompt() {
         playAgainDiv.style.visibility = "hidden";
+    }
+
+    // if the user clicks no
+    function displayFinalWinner() {
+        // show only the div, which will display the final winner and his score
+        // change body bg
+
+        scoreboard.style.display = "none";
+        table.style.display = "none";
+        playAgainDiv.style.display = "none";
+        messages.style.fontSize = "2rem";
+        body.style.backgroundColor = "aquamarine";
+        let finalWinner = gameController.checkFinalWinner();
+        messages.textContent = ("The final winner is " + finalWinner.name + " with a score of " + finalWinner.score + "!");
     }
 
     return { displayBoard, addEventsToCells, stopGame, displayPlayerNames, displayPlayerScores, showAgainPrompt, hideAgainPrompt, displayMessage, updatePlayerIndex };
