@@ -174,7 +174,7 @@ const viewController = (function () {
     const playerOneScore = document.querySelector("#player-one-score");
     const playerTwoScore = document.querySelector("#player-two-score");
     const messages = document.querySelector("#messages");
-    const board = document.querySelector("table");
+    const playAgainDiv = document.querySelector("#play-again");
     
     let currentBoard = gameboard.getBoard();
     let l = 0;
@@ -227,9 +227,14 @@ const viewController = (function () {
         for (const cell of cells) {
             cell.removeEventListener("click", cell.fn);
         }
+        playAgainPrompt();
     }
 
-    return { displayBoard, stopGame, displayPlayerNames, displayPlayerScores, displayMessage, updatePlayerIndex };
+    function playAgainPrompt() {
+        playAgainDiv.style.visibility = "visible";
+    }
+
+    return { displayBoard, stopGame, displayPlayerNames, displayPlayerScores, playAgainPrompt, displayMessage, updatePlayerIndex };
 })();
 
 

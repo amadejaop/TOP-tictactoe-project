@@ -9,15 +9,16 @@ body {
     width: 100vw;
 }
 
+#play-again {
+    visibility: hidden;
+}
+
 #scoreboard {
     display: flex;
     justify-content: space-evenly;
     width: 90vw;
 }
 
-table {
-    margin-bottom: 20vh;
-}
 
 td {
     background-color: pink;
