@@ -1,9 +1,16 @@
+@font-face {
+    font-family: Radon;
+    src: url(./fonts/MonaspaceRadon-Light.woff),
+}
+
 body {
-    
+    background-image: url(./images/bg3.png);
+    color: #36454f;
     height: 100vh;
     margin: 0;
     padding: 0;
     width: 100vw;
+    font-family: Radon, Arial, Helvetica, sans-serif;
 }
 
 main {
@@ -16,6 +23,9 @@ main {
 
 #play-again {
     visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #scoreboard {
@@ -26,8 +36,7 @@ main {
 
 
 td {
-    background-color: pink;
-    font-size: 2rem;
+    font-size: 4rem;
     height: 100px;
     text-align: center;
     width: 100px;
@@ -37,4 +46,56 @@ footer p {
     text-align: center;
     width: 75%;
     margin: 0 auto;
+}
+
+#player-one-name,
+#player-two-name {
+    font-size: 1.3rem;
+}
+
+#player-one-score,
+#player-two-score {
+    font-size: 1.7rem;
+}
+
+#messages {
+    font-size: 1.7rem;
+}
+
+table {
+    border-collapse: collapse;
+}
+td + td { border-left: 3px solid #3d3d3d; }
+tr + tr { border-top: 3px solid #3d3d3d; }
+
+span {
+    font-size: 2rem;
+    color: #ff007f;
+}
+
+a,
+a:visited {
+    color: #ff007f;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:active {
+    color: #890044;
+}
+
+button {
+    border: none;
+    background-color: transparent;
+    font-family: Radon, Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+}
+
+button:hover {
+    color: #ff007f;
+    cursor: pointer;
+    text-decoration: underline;
 }

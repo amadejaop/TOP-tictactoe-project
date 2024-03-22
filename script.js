@@ -169,7 +169,7 @@ const gameController = (function () {
         }
         (event.target.playerIndex === 1) ? viewController.updatePlayerIndex(2) : viewController.updatePlayerIndex(1);
         if (!gameOver) {
-            viewController.displayMessage("It's " + listOfPlayers[event.target.playerIndex - 1].name + "'s turn. IN PLAYTURN()");
+            viewController.displayMessage("It's " + listOfPlayers[event.target.playerIndex - 1].name + "'s turn.");
         }    }
 
     function swapPlayers(number) {
@@ -180,7 +180,9 @@ const gameController = (function () {
     }
 
     function checkFinalWinner() {
-        if (listOfPlayers[0].score > listOfPlayers[1].score) {
+        if (listOfPlayers[0].score === listOfPlayers[1].score) {
+            return "";
+        } else if (listOfPlayers[0].score > listOfPlayers[1].score) {
             return listOfPlayers[0];
         } else {
             return listOfPlayers[1];
@@ -277,14 +279,20 @@ const viewController = (function () {
     function displayFinalWinner() {
         // show only the div, which will display the final winner and his score
         // change body bg
+        let colors = ["#E0BBE4", "#FFDFD3", "#FEC8D8", "#BBE2EE", "#CEE9AE", "#FBD1AC", "#FAE9B0"];
+        let colorIndex = Math.floor(Math.random() * 7);
 
         scoreboard.style.display = "none";
         table.style.display = "none";
         playAgainDiv.style.display = "none";
-        messages.style.fontSize = "2rem";
-        body.style.backgroundColor = "aquamarine";
+        messages.style.fontSize = "2.2rem";
+        body.style.backgroundColor = colors[colorIndex];
         let finalWinner = gameController.checkFinalWinner();
-        messages.textContent = ("The final winner is " + finalWinner.name + " with a score of " + finalWinner.score + "!");
+        if (finalWinner === "") {
+            messages.textContent = "Both players got the same score!"
+        } else {
+            messages.textContent = ("The final winner is " + finalWinner.name + " with a score of " + finalWinner.score + "!");
+        }
     }
 
     return { displayBoard, addEventsToCells, stopGame, displayPlayerNames, displayPlayerScores, showAgainPrompt, hideAgainPrompt, displayMessage, updatePlayerIndex };
@@ -304,7 +312,7 @@ function playGame() {
     gameboard.createBoard();
     viewController.displayBoard();
     gameboard.printBoard();
-    viewController.displayMessage("It's " + listOfPlayers[0].name + "'s turn. IN PLAYGAME()");
+    viewController.displayMessage("It's " + listOfPlayers[0].name + "'s turn.");
     playRound();
     /*
     do {
@@ -365,7 +373,7 @@ function playRound() {
     viewController.displayBoard();
     gameboard.printBoard();
     viewController.addEventsToCells();
-    viewController.displayMessage("It's " + listOfPlayers[0].name + "'s turn. IN PLAYROUND()");
+    viewController.displayMessage("It's " + listOfPlayers[0].name + "'s turn.");
 }
 
 playGame();
