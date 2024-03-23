@@ -3,49 +3,66 @@
     src: url(./fonts/MonaspaceRadon-Light.woff),
 }
 
+a,
+a:visited {
+    color: #ff007f;
+    text-decoration: none;
+}
+
+a:active {
+    color: #890044;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 body {
     background-image: url(./images/bg3.png);
     color: #36454f;
+    font-family: Radon, Arial, Helvetica, sans-serif;
     height: 100vh;
     margin: 0;
     padding: 0;
-    width: 100vw;
+    width: 100vw;    
+}
+
+button {
+    background-color: transparent;
+    border: none;    
     font-family: Radon, Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+}
+
+button:hover {
+    color: #ff007f;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+footer p {
+    margin: 0 auto;
+    text-align: center;
+    width: 75%;    
 }
 
 main {
     align-items: center;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     height: 90vh;
+    justify-content: space-around;
+}
+
+#messages {
+    font-size: 1.7rem;
 }
 
 #play-again {
-    visibility: hidden;
+    align-items: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
-}
-
-#scoreboard {
-    display: flex;
-    justify-content: space-evenly;
-    width: 90vw;
-}
-
-
-td {
-    font-size: 4rem;
-    height: 100px;
-    text-align: center;
-    width: 100px;
-}
-
-footer p {
-    text-align: center;
-    width: 75%;
-    margin: 0 auto;
+    visibility: hidden;
 }
 
 #player-one-name,
@@ -58,44 +75,33 @@ footer p {
     font-size: 1.7rem;
 }
 
-#messages {
-    font-size: 1.7rem;
+#scoreboard {
+    display: flex;
+    justify-content: space-evenly;
+    width: 90vw;
 }
+
+span {
+    color: #ff007f;
+    font-size: 2rem;
+}
+
 
 table {
     border-collapse: collapse;
 }
-td + td { border-left: 3px solid #3d3d3d; }
-tr + tr { border-top: 3px solid #3d3d3d; }
 
-span {
-    font-size: 2rem;
-    color: #ff007f;
+td {
+    font-size: 4rem;
+    height: 100px;
+    text-align: center;
+    width: 100px;
 }
 
-a,
-a:visited {
-    color: #ff007f;
-    text-decoration: none;
+td + td { 
+    border-left: 3px solid #3d3d3d; 
 }
 
-a:hover {
-    text-decoration: underline;
-}
-
-a:active {
-    color: #890044;
-}
-
-button {
-    border: none;
-    background-color: transparent;
-    font-family: Radon, Arial, Helvetica, sans-serif;
-    font-size: 1.5rem;
-}
-
-button:hover {
-    color: #ff007f;
-    cursor: pointer;
-    text-decoration: underline;
+tr + tr { 
+    border-top: 3px solid #3d3d3d; 
 }
