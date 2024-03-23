@@ -24,12 +24,6 @@ const gameboard = (function () {
         return board;
     }
 
-    function printBoard() {
-        for (let i = 0; i < rows; i++) {
-            console.log(...board[i]);
-        }
-    }
-
     function chosenCellEmpty(row, column) {
         return (board[row][column] === "");
     }
@@ -78,7 +72,7 @@ const gameboard = (function () {
         return false;
     }
 
-    return { boardFull, emptyBoard, checkWinner, chosenCellEmpty, createBoard, printBoard, markChosenCell, getBoard };
+    return { boardFull, emptyBoard, checkWinner, chosenCellEmpty, createBoard, markChosenCell, getBoard };
 })();
 
 const players = (function () {
@@ -102,64 +96,42 @@ const players = (function () {
         return playersList;
     }
 
-    function getPlayerScore(player) {
-        return player.score;
-    }
-
-    function getPlayerName(player) {
-        return player.name;
-    }
-
-    return { askForPlayerName, getPlayerName, createPlayer, getPlayersList, getPlayerScore };
+    return { askForPlayerName,  createPlayer, getPlayersList };
 })();
 
 const gameController = (function () {
-
     const listOfPlayers = players.getPlayersList();
-    console.log(listOfPlayers);
-    
-    function generateRandomNumber() {
-        return (Math.floor(Math.random() * 2));
-    }
 
     function playTurn(event) { 
-
         let index = event.target.playerIndex - 1;
-
         let gameOver = false;
         
         if (gameboard.chosenCellEmpty(event.target.row, event.target.column)) {
             gameboard.markChosenCell(event.target.row, event.target.column, listOfPlayers[index].symbol);
             viewController.displayBoard();
-            gameboard.printBoard();
             gameboard.checkWinner(listOfPlayers[0]);
             gameboard.checkWinner(listOfPlayers[1]);
 
             if (gameboard.boardFull()) {
                 if (listOfPlayers[0].winner) {
                     viewController.displayMessage(listOfPlayers[0].name + " wins!");
-                    console.log(listOfPlayers[0].name + " wins!");
                     gameOver = viewController.stopGame();
                     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
                 } else if (listOfPlayers[1].winner) {
                     viewController.displayMessage(listOfPlayers[1].name + " wins!");
-                    console.log(listOfPlayers[1].name + " wins!");
                     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
                     gameOver = viewController.stopGame();
                 } else {
                     viewController.displayMessage("It's a draw!");
-                    console.log("draw");
                     gameOver = viewController.stopGame();
                 }
             } else {
                 if (listOfPlayers[0].winner) {
                     viewController.displayMessage(listOfPlayers[0].name + " wins!");
-                    console.log(listOfPlayers[0].name + " wins!");
                     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
                     gameOver = viewController.stopGame();
                 } else if (listOfPlayers[1].winner) {
                     viewController.displayMessage(listOfPlayers[1].name + " wins!");
-                    console.log(listOfPlayers[1].name + " wins!");
                     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
                     gameOver = viewController.stopGame();
                 }
@@ -170,13 +142,7 @@ const gameController = (function () {
         (event.target.playerIndex === 1) ? viewController.updatePlayerIndex(2) : viewController.updatePlayerIndex(1);
         if (!gameOver) {
             viewController.displayMessage("It's " + listOfPlayers[event.target.playerIndex - 1].name + "'s turn.");
-        }    }
-
-    function swapPlayers(number) {
-        if (number === 0) {
-            return 1;
-        }
-        return 0;
+        }    
     }
 
     function checkFinalWinner() {
@@ -189,7 +155,7 @@ const gameController = (function () {
         }
     }
 
-    return { playTurn, generateRandomNumber, swapPlayers, checkFinalWinner };
+    return { playTurn, checkFinalWinner };
 })();
 
 const viewController = (function () {
@@ -222,7 +188,6 @@ const viewController = (function () {
                 cells[l].addEventListener("click",cells[l].fn=function(event) {
                     gameController.playTurn(event);
                 });
-                console.log("event added");
                 l++;
             }
         }
@@ -261,7 +226,6 @@ const viewController = (function () {
     function stopGame() {
         for (const cell of cells) {
             cell.removeEventListener("click", cell.fn);
-            console.log("event removed");
         }
         showAgainPrompt();
         return true;
@@ -275,10 +239,7 @@ const viewController = (function () {
         playAgainDiv.style.visibility = "hidden";
     }
 
-    // if the user clicks no
     function displayFinalWinner() {
-        // show only the div, which will display the final winner and his score
-        // change body bg
         let colors = ["#E0BBE4", "#FFDFD3", "#FEC8D8", "#BBE2EE", "#CEE9AE", "#FBD1AC", "#FAE9B0"];
         let colorIndex = Math.floor(Math.random() * 7);
 
@@ -306,62 +267,10 @@ function playGame() {
     const listOfPlayers = players.getPlayersList();
     viewController.displayPlayerNames(listOfPlayers[0].name, listOfPlayers[1].name);
     viewController.displayPlayerScores(listOfPlayers[0].score, listOfPlayers[1].score);
-
-    // let playAgain = "";
-    // code for playing another round of the game
     gameboard.createBoard();
     viewController.displayBoard();
-    gameboard.printBoard();
     viewController.displayMessage("It's " + listOfPlayers[0].name + "'s turn.");
     playRound();
-    /*
-    do {
-        gameboard.createBoard();
-        viewController.displayBoard();
-        // gameboard.printBoard();
-
-        // let firstPlayer = gameController.generateRandomNumber();
-        viewController.displayMessage("It's " + listOfPlayers[0].name + "'s turn.");
-        // console.log("It's " + listOfPlayers[firstPlayer].name + "'s turn.");
-        // gameController.playTurn(listOfPlayers[firstPlayer]);
-        viewController.displayBoard();
-        // gameboard.printBoard();
-
-        // let index = firstPlayer;
-        
-        while (!gameboard.boardFull()){
-            index = gameController.swapPlayers(index);
-            viewController.displayMessage("It's " + listOfPlayers[index].name + "'s turn.");
-            // console.log("It's " + listOfPlayers[index].name + "'s turn.");
-            gameController.playTurn(listOfPlayers[index]);
-            // gameboard.printBoard();
-            viewController.displayBoard();
-            if (gameboard.checkWinner(listOfPlayers[0])) {
-                viewController.displayMessage(listOfPlayers[0].name + " wins!");
-                // console.log(listOfPlayers[0].name + " wins!");
-                break;
-            } else if (gameboard.checkWinner(listOfPlayers[1])) {
-                viewController.displayMessage(listOfPlayers[1].name + " wins!");
-                //console.log(listOfPlayers[1].name + " wins!");
-                break;
-            }
-        }
-        if (gameboard.boardFull()) {
-            if (gameboard.checkWinner(listOfPlayers[0])) {
-                viewController.displayMessage(listOfPlayers[0].name + " wins!");
-                // console.log(listOfPlayers[0].name + " wins!");
-            } else if (gameboard.checkWinner(listOfPlayers[1])) {
-                viewController.displayMessage(listOfPlayers[1].name + " wins!");
-                // console.log(listOfPlayers[1].name + " wins!");
-            } else {
-                viewController.displayMessage("It's a draw!");
-                // console.log("It's a draw!");
-            }
-        }
-
-        playAgain = prompt("Play again? (y / n)");
-    } while (playAgain.toLowerCase() === "y") */
-
 }
 
 function playRound() {
@@ -371,7 +280,6 @@ function playRound() {
     listOfPlayers[1].winner = false;
     gameboard.emptyBoard();
     viewController.displayBoard();
-    gameboard.printBoard();
     viewController.addEventsToCells();
     viewController.displayMessage("It's " + listOfPlayers[0].name + "'s turn.");
 }
